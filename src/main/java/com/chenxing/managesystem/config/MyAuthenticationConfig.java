@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
-import com.chenxing.managesystem.interceptor.CustomUserService;
 import com.chenxing.managesystem.interceptor.MyAuthenticationProvider;
+import com.chenxing.managesystem.service.CustomUserService;
 
 /**
  * 初始化类：权限认证

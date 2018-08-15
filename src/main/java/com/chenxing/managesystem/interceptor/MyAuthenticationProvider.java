@@ -18,6 +18,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.chenxing.managesystem.service.CustomUserService;
+
 @Component
 public class MyAuthenticationProvider implements AuthenticationProvider {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
