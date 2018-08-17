@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.chenxing.common.vo.PageResult;
 import com.chenxing.managesystem.dao.PermissionDao;
 import com.chenxing.managesystem.dao.UserDao;
 import com.chenxing.managesystem.domain.Permission;
@@ -45,7 +46,8 @@ public class CustomUserService implements UserDetailsService { //自定义UserDe
             throw new UsernameNotFoundException("admin: " + username + " do not exist!");
         }
     }
-    public List<SysUser> findUserList(int currenpage,int pagesize) {
+
+	public PageResult<SysUser> findUserList(int currenpage, int pagesize) {
     	return userDao.findUser( currenpage, pagesize);
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.chenxing.common.jdbc.MyJdbcTemplate;
 import com.chenxing.common.pagination.PaginationResult;
 import com.chenxing.common.pagination.SortType;
+import com.chenxing.common.vo.PageResult;
 import com.chenxing.managesystem.domain.SysRole;
 import com.chenxing.managesystem.domain.SysUser;
 
@@ -52,7 +53,7 @@ public class UserDao {
 		return map2Obj(ms);
 	}
 
-	public List<SysUser> findUser(int currentpage, int pagesize) {
+	public PageResult<SysUser> findUser(int currentpage, int pagesize) {
 
 		String rsql = "SELECT u.id,u.username,u.password from sys_user u";
 		PaginationResult<Map<String, String>> res = jdbcTemplate.queryForPage(rsql, currentpage, pagesize, "id",
@@ -67,7 +68,12 @@ public class UserDao {
 				return p;
 			}
 		});
-		return map2Obj2(res.getData());
+		List<SysUser> lst = map2Obj2(res.getData());
+		PageResult<SysUser> pr = new PageResult<SysUser>();
+		pr.setArray(lst);
+		pr.setTotalCount(res.getTotalCount());
+		pr.setTotalPage(res.getTotalPage());
+		return pr;
 	}
 
 	private List<SysUser> map2Obj2(List<Map<String, String>> ms) {

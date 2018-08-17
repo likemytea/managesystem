@@ -1,7 +1,5 @@
 package com.chenxing.managesystem.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
+import com.chenxing.common.vo.PageResult;
 import com.chenxing.managesystem.domain.SysUser;
 import com.chenxing.managesystem.service.CustomUserService;
 
@@ -31,7 +30,7 @@ public class SystemController {
 	@ResponseBody
 	@RequestMapping(value = "/system/user/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public String getUserList(@RequestParam int currentpage, @RequestParam int pagesize, HttpServletResponse response) {
-		List<SysUser> list = customUserService.findUserList(currentpage, pagesize);
+		PageResult<SysUser> list = customUserService.findUserList(currentpage, pagesize);
 		log.info("user数组"+JSON.toJSONString(list));
 		return JSON.toJSONString(list);
 

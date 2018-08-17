@@ -115,18 +115,21 @@
     
     function getData($page,$pageSize){//获取数据，可使用各种语言替换^_^
          var $mydata = [];
+         var $totalCount = 0;
 	   	 var toSend=$.ajax({
 		     type:'get',
 		     url:'http://localhost:8060/system/user/list',
+		     async: false,
 		     data:{currentpage:$page,pagesize:$pageSize},
 		     cache:false,
 		     dataType:'json',
 		     success:function(data){
-		    	 for(var i = 0; i < data.length; i++){
+		    	 $totalCount = data.totalCount;
+		    	 for(var i = 0; i < data.array.length; i++){
 		    	        $mydata.push( {
-		    	            id:data[i]['id'],
-		    	            name:data[i]['username'],
-		    	  		    roles:data[i]['password']
+		    	            id:data.array[i]['id'],
+		    	            name:data.array[i]['username'],
+		    	  		    roles:data.array[i]['password']
 		    	          });
 		    	 }
 		     },
@@ -145,7 +148,7 @@
 		  roles:'role'+$i+$i
         });
       }
-      var $returnData = {'data':$mydata,'total':103};
+      var $returnData = {'data':$mydata,'total':$totalCount};
       return $returnData;
     }
  
@@ -169,7 +172,7 @@
       methods:{
         listItems: function () {//列出需要的数据
           var returnData =getData(this.page,this.pageSize);
-          this.listData = returnData.data;
+          this.listData = returnData['data'];
           this.total=returnData['total'];
           this.setPageList(this.total, this.page, this.pageSize);
         },
