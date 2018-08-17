@@ -1,5 +1,7 @@
 package com.chenxing.managesystem.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.chenxing.common.result.BaseResult;
+import com.chenxing.managesystem.domain.SysUser;
 import com.chenxing.managesystem.service.CustomUserService;
 
 /**
@@ -31,18 +34,9 @@ public class SystemController {
 	@ResponseBody
 	@RequestMapping(value = "/system/user/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public String getUserList(@RequestParam int currentpage, @RequestParam int pagesize, HttpServletResponse response) {
-		// response.setHeader("Access-Control-Allow-Origin", "*");
-		response.getHeaderNames();
-		log.info("aaaaaaaa");
-		BaseResult<Object> result = new BaseResult<>();
-		long start = System.currentTimeMillis();
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		customUserService.loadUserByUsername(userDetails.getUsername());
-		long end = System.currentTimeMillis();
-		log.info(JSON.toJSONString(userDetails) + userDetails.getPassword());
-		log.info("消耗时长 " + (start - end) + "毫秒");
-		result.setData(userDetails);
-		return JSON.toJSONString(result);
+		List<SysUser> list = customUserService.findUserList();
+		log.info("user数组"+JSON.toJSONString(list));
+		return JSON.toJSONString(list);
 
 	}
 

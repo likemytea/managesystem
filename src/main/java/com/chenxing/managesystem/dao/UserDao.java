@@ -47,7 +47,34 @@ public class UserDao {
 		}, username);
 		return map2Obj(ms);
 	}
+	public List<SysUser> findUser() {
 
+		String rsql = "SELECT u.id,u.username,u.password from sys_user u";
+
+		List<Map<String, String>> ms = jdbcTemplate.query(rsql, new RowMapper<Map<String, String>>() {
+			@Override
+			public Map<String, String> mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Map<String, String> p = new HashMap<String, String>();
+				p.put("userid", String.valueOf(rs.getInt(1)));
+				p.put("username", rs.getString(2));
+				p.put("password", rs.getString(3));
+				return p;
+			}
+		});
+		return map2Obj2(ms);
+	}
+	private List<SysUser> map2Obj2(List<Map<String, String>> ms) {
+		List<SysUser> list = new ArrayList<SysUser>();
+		SysUser user = null;
+		for (Map<String, String> map : ms) {
+			user = new SysUser();
+			user.setId(Integer.parseInt(map.get("userid")));
+			user.setUsername(map.get("username"));
+			user.setPassword(map.get("password"));
+			list.add(user);
+		}
+		return list;
+	}
 	private SysUser map2Obj(List<Map<String, String>> ms) {
 		SysUser p = new SysUser();
 		SysRole sysRole = null;
