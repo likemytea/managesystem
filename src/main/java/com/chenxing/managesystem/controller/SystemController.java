@@ -1,42 +1,49 @@
 package com.chenxing.managesystem.controller;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
+import com.chenxing.common.result.BaseResult;
+import com.chenxing.managesystem.service.CustomUserService;
+
 /**
- * 系统功能类
+ * 系统功能类：主要用来管理系统权限，角色，系统的使用者如管理员等等
  * <p>
  * Created by liuxing on 17/1/18.
  */
 @RestController
 public class SystemController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	// @RequestMapping("/system/user/list")
-	// public String goHomePage(Model model) {
-	// UserDetails userDetails = (UserDetails)
-	// SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	// SysUser user = new SysUser();
-	// user.setUsername(userDetails.getUsername());
-	// model.addAttribute("user", user);
-	// return "homepage";
-	// }
-	//
-	// @RequestMapping(value = "/system/user/list", method = RequestMethod.GET)
-	// public BaseResult<Object> getUserList(Model model, @RequestParam String id,
-	// @RequestParam String name,
-	// @RequestParam int currentpage,
-	// @RequestParam int pagesize) {
-	// BaseResult<Object> result = new BaseResult<>();
-	// log.info(name);
-	// long start = System.currentTimeMillis();
-	//
-	//
-	// long end = System.currentTimeMillis();
-	// log.info("消耗时长 " + (start - end) + "毫秒");
-	// result.setData("");
-	// return result;
-	//
-	// }
+	@Autowired
+	private CustomUserService customUserService;
+
+	@ResponseBody
+	@RequestMapping(value = "/system/user/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public String getUserList(@RequestParam int currentpage, @RequestParam int pagesize, HttpServletResponse response) {
+		// response.setHeader("Access-Control-Allow-Origin", "*");
+		response.getHeaderNames();
+		log.info("aaaaaaaa");
+		BaseResult<Object> result = new BaseResult<>();
+		long start = System.currentTimeMillis();
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		customUserService.loadUserByUsername(userDetails.getUsername());
+		long end = System.currentTimeMillis();
+		log.info(JSON.toJSONString(userDetails) + userDetails.getPassword());
+		log.info("消耗时长 " + (start - end) + "毫秒");
+		result.setData(userDetails);
+		return JSON.toJSONString(result);
+
+	}
 
 }

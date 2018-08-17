@@ -5,6 +5,7 @@
     <title>使用vue2.5.17与bootstrap3列表分页</title>
     <link href="http://test.mystaticdomain.com/css/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
     <script type="text/javascript" src="http://test.mystaticdomain.com/js/vue-2.5.17.js"></script>
+    <script type="text/javascript" src="http://test.mystaticdomain.com/js/jquery.min.js"></script>
   </head>
   <body>
  
@@ -111,17 +112,33 @@
  
  
     <script type="text/javascript">
- 
+    
     function getData($page,$pageSize){//获取数据，可使用各种语言替换^_^
+
+	   	 var toSend=$.ajax({
+		     type:'get',
+		     url:'http://localhost:8060/system/user/list?currentpage=1&pagesize=10',
+		     data:{},
+		     cache:false,
+		     dataType:'json',
+		     success:function(data){
+		         alert("ajax-success"+data);
+		     },
+             error:function(XMLHttpRequest, textStatus, errorThrown) {
+               //  alert(XMLHttpRequest.status);
+               //  alert(XMLHttpRequest.readyState);
+               //  alert(textStatus);
+             }
+		 });
+    	
       var $data = [];
-      for (var $i=($page-1)*$pageSize+1; $i <=$page*$pageSize ; $i++) { 
+      for (var $i=($page-1)*$pageSize+1; $i <=$page*$pageSize ; $i++) {
         $data.push( {
           id:$i,
           name:'name'+$i,
 		  roles:'role'+$i+$i
         });
       }
-      alert($data);
       var $returnData = {'data':$data,'total':103};
       return $returnData;
     }
