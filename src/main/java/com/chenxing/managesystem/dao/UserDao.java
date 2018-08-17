@@ -8,25 +8,29 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.chenxing.common.jdbc.MyJdbcTemplate;
+import com.chenxing.common.pagination.PaginationResult;
+import com.chenxing.common.pagination.SortType;
 import com.chenxing.managesystem.domain.SysRole;
 import com.chenxing.managesystem.domain.SysUser;
 
-/**  
-* Description:
-* @author liuxing
-* @date 2018年5月14日  
-* @version 1.0  
-*/
+/**
+ * Description:
+ * 
+ * @author liuxing
+ * @date 2018年5月14日
+ * @version 1.0
+ */
 @Repository
 public class UserDao {
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
-
+	@Qualifier("myJdbcTemplatep3")
+	private MyJdbcTemplate jdbcTemplate;
 
 	public SysUser findByUserName(String username) {
 
@@ -47,11 +51,13 @@ public class UserDao {
 		}, username);
 		return map2Obj(ms);
 	}
-	public List<SysUser> findUser() {
+
+	public List<SysUser> findUser(int currentpage, int pagesize) {
 
 		String rsql = "SELECT u.id,u.username,u.password from sys_user u";
-
-		List<Map<String, String>> ms = jdbcTemplate.query(rsql, new RowMapper<Map<String, String>>() {
+		PaginationResult<Map<String, String>> res = jdbcTemplate.queryForPage(rsql, currentpage, pagesize, "id",
+				SortType.DESC,
+				new RowMapper<Map<String, String>>() {
 			@Override
 			public Map<String, String> mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Map<String, String> p = new HashMap<String, String>();
@@ -61,8 +67,9 @@ public class UserDao {
 				return p;
 			}
 		});
-		return map2Obj2(ms);
+		return map2Obj2(res.getData());
 	}
+
 	private List<SysUser> map2Obj2(List<Map<String, String>> ms) {
 		List<SysUser> list = new ArrayList<SysUser>();
 		SysUser user = null;
@@ -75,6 +82,7 @@ public class UserDao {
 		}
 		return list;
 	}
+
 	private SysUser map2Obj(List<Map<String, String>> ms) {
 		SysUser p = new SysUser();
 		SysRole sysRole = null;

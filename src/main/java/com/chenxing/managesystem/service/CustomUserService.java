@@ -45,7 +45,7 @@ public class CustomUserService implements UserDetailsService { //自定义UserDe
             throw new UsernameNotFoundException("admin: " + username + " do not exist!");
         }
     }
-    public List<SysUser> findUserList() {
-    	return userDao.findUser();
+    public List<SysUser> findUserList(int currenpage,int pagesize) {
+    	return userDao.findUser( currenpage, pagesize);
     }
 }

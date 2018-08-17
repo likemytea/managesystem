@@ -117,8 +117,8 @@
          var $mydata = [];
 	   	 var toSend=$.ajax({
 		     type:'get',
-		     url:'http://localhost:8060/system/user/list?currentpage=1&pagesize=10',
-		     data:{},
+		     url:'http://localhost:8060/system/user/list',
+		     data:{currentpage:$page,pagesize:$pageSize},
 		     cache:false,
 		     dataType:'json',
 		     success:function(data){
@@ -154,7 +154,7 @@
       data: {
         listData:[],
         page: 1,//当前页码
-        pageSize: 10,//每页条数
+        pageSize: 5,//每页条数
         total:0,//总数
         pageData: {
           curPage: 1,
