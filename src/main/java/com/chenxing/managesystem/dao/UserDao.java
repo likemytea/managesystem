@@ -35,8 +35,8 @@ public class UserDao {
 
 	public SysUser findByUserName(String username) {
 
-		String rsql = "SELECT u.id,u.username,u.password,r.name from sys_user u "
-				+ "left join sys_role_user sru on u.id= sru.sys_user_id "
+		String rsql = "SELECT u.sys_user_id,u.username,u.password,r.name from sys_user u "
+				+ "left join sys_role_user sru on u.sys_user_id= sru.sys_user_id "
 				+ "LEFT JOIN sys_role r on sru.sys_role_id=r.id where username= ?";
 
 		List<Map<String, String>> ms = jdbcTemplate.query(rsql, new RowMapper<Map<String, String>>() {
@@ -55,8 +55,9 @@ public class UserDao {
 
 	public PageResult<SysUser> findUser(int currentpage, int pagesize) {
 
-		String rsql = "SELECT u.id,u.username,u.password from sys_user u";
-		PaginationResult<Map<String, String>> res = jdbcTemplate.queryForPage(rsql, currentpage, pagesize, "id",
+		String rsql = "SELECT u.sys_user_id,u.username,u.password from sys_user u";
+		PaginationResult<Map<String, String>> res = jdbcTemplate.queryForPage(rsql, currentpage, pagesize,
+				"sys_user_id",
 				SortType.DESC,
 				new RowMapper<Map<String, String>>() {
 			@Override
@@ -105,4 +106,11 @@ public class UserDao {
 		return p;
 	}
 
+	public void createtable() {
+		String sql_1 = "CREATE TABLE IF NOT EXISTS `sys_user` (`sys_user_id` bigint(20) NOT NULL,`province_id` bigint(20) NOT NULL,`username` varchar(200) NOT NULL,`password` varchar(200) DEFAULT NULL,PRIMARY KEY (`sys_user_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+		String sql_2 = "CREATE TABLE IF NOT EXISTS `sys_role_user` (`id` bigint(20) NOT NULL,`province_id` bigint(20) NOT NULL,`sys_user_id` bigint(20) NOT NULL,`sys_role_id` bigint(20) NOT NULL,PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+
+		jdbcTemplate.execute(sql_1);
+		jdbcTemplate.execute(sql_2);
+	}
 }

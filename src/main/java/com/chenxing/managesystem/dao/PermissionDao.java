@@ -26,10 +26,10 @@ public class PermissionDao {
 	public List<Permission> findByPermissionByUserId(int userid) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select p.description,p.id,p.name,p.pid,p.url from sys_user u ");
-		sb.append("LEFT JOIN sys_role_user sru on u.id= sru.Sys_User_id ");
+		sb.append("LEFT JOIN sys_role_user sru on u.sys_user_id= sru.Sys_User_id ");
 		sb.append("LEFT JOIN sys_role r on sru.Sys_Role_id=r.id ");
 		sb.append("LEFT JOIN sys_permission_role spr on spr.role_id=r.id ");
-		sb.append("LEFT JOIN sys_permission p on p.id =spr.permission_id where u.id=?");
+		sb.append("LEFT JOIN sys_permission p on p.id =spr.permission_id where u.sys_user_id=?");
 
 		List<Permission> ms = jdbcTemplate.query(sb.toString(), new RowMapper<Permission>() {
 			@Override
