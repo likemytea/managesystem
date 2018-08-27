@@ -50,8 +50,4 @@ public class CustomUserService implements UserDetailsService { //自定义UserDe
 	public PageResult<SysUser> findUserList(int currenpage, int pagesize) {
     	return userDao.findUser( currenpage, pagesize);
     }
-
-	public void createTable() {
-		userDao.createtable();
-	}
 }

@@ -85,13 +85,6 @@
 	       <artifactId>fastjson</artifactId>
 	       <version>1.2.9</version>
 	    </dependency>
-        <!-- sharding jdbc start  -->
-		<dependency>
-		    <groupId>io.shardingsphere</groupId>
-		    <artifactId>sharding-jdbc</artifactId>
-		    <version>3.0.0.M1</version>
-		</dependency>
-        <!-- sharding jdbc end  -->
 	</dependencies>
     <dependencyManagement>
         <dependencies>

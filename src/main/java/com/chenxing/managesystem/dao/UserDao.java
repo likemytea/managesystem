@@ -105,12 +105,4 @@ public class UserDao {
 		p.setRoles(roles);
 		return p;
 	}
-
-	public void createtable() {
-		String sql_1 = "CREATE TABLE IF NOT EXISTS `sys_user` (`sys_user_id` bigint(20) NOT NULL,`province_id` bigint(20) NOT NULL,`username` varchar(200) NOT NULL,`password` varchar(200) DEFAULT NULL,PRIMARY KEY (`sys_user_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
-		String sql_2 = "CREATE TABLE IF NOT EXISTS `sys_role_user` (`id` bigint(20) NOT NULL,`province_id` bigint(20) NOT NULL,`sys_user_id` bigint(20) NOT NULL,`sys_role_id` bigint(20) NOT NULL,PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
-
-		jdbcTemplate.execute(sql_1);
-		jdbcTemplate.execute(sql_2);
-	}
 }

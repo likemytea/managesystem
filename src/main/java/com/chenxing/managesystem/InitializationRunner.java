@@ -21,6 +21,7 @@ public class InitializationRunner implements ApplicationRunner {
 	@Autowired
 	private CustomUserService customUserService;
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -29,14 +30,13 @@ public class InitializationRunner implements ApplicationRunner {
 	 */
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		log.info("创建sharding-jdbc数据节点（物理表）");
-		createtable();
+		log.info("initialization start ...");
+		todo();
 	}
 
 	/**
-	 * 创建shardingjdbc数据节点（也就是物理表）
+	 * task1
 	 */
-	private void createtable() {
-		customUserService.createTable();
+	private void todo() {
 	}
 }
