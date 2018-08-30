@@ -2,7 +2,8 @@
 SQLyog v10.2 
 MySQL - 5.7.21 : Database - rbac
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -136,15 +137,15 @@ insert  into `sys_role_user`(`id`,`sys_user_id`,`sys_role_id`) values (1,1,1),(2
 DROP TABLE IF EXISTS `sys_user`;
 
 CREATE TABLE `sys_user` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `sys_user_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`sys_user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4347 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `sys_user` */
 
-insert  into `sys_user`(`id`,`username`,`password`) values (1,'admin','admin'),(2,'abel','abel'),(3,'abc','abc'),(4,'sdfs','fdfff'),(231,'adaa','adfadffdd'),(234,'你好','534fh'),(434,'aa','dfsfa'),(532,'adsfaaa','fffff'),(4324,'fddd','adsfaf'),(4325,'sfefsg','6433'),(4326,'75633','552'),(4327,'523fd','sfesfaa3sf'),(4328,'353sdfh','3wwfaa'),(4329,'353sfs','53g453d'),(4330,'53rgga','sggs53'),(4331,'dgdg','aggs'),(4332,'gergs','ggsg'),(4333,'gg','gsrgg'),(4334,'gege','egege'),(4335,'etets','egsege4'),(4336,'setset','eteth'),(4337,'53er','gsr4'),(4338,'srret43','3t4ersg'),(4339,'setge','3533'),(4340,'seseg','34waedvhs'),(4341,'63546sgerg','54332fgd'),(4342,'3463fg6','dfgds'),(4343,'111222','1121'),(4344,'21433','53s'),(4345,'534gssfff','fsef'),(4346,'5345ffff','drgrd');
+insert  into `sys_user`(`sys_user_id`,`username`,`password`) values (1,'admin','admin'),(2,'abel','abel'),(3,'abc','abc'),(4,'sdfs','fdfff'),(231,'adaa','adfadffdd'),(234,'你好','534fh'),(434,'aa','dfsfa'),(532,'adsfaaa','fffff'),(4324,'fddd','adsfaf'),(4325,'sfefsg','6433'),(4326,'75633','552'),(4327,'523fd','sfesfaa3sf'),(4328,'353sdfh','3wwfaa'),(4329,'353sfs','53g453d'),(4330,'53rgga','sggs53'),(4331,'dgdg','aggs'),(4332,'gergs','ggsg'),(4333,'gg','gsrgg'),(4334,'gege','egege'),(4335,'etets','egsege4'),(4336,'setset','eteth'),(4337,'53er','gsr4'),(4338,'srret43','3t4ersg'),(4339,'setge','3533'),(4340,'seseg','34waedvhs'),(4341,'63546sgerg','54332fgd'),(4342,'3463fg6','dfgds'),(4343,'111222','1121'),(4344,'21433','53s'),(4345,'534gssfff','fsef'),(4346,'5345ffff','drgrd');
 
 /*Table structure for table `test_01` */
 
