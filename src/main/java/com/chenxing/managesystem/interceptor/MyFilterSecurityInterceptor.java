@@ -11,13 +11,11 @@ import javax.servlet.ServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
 import org.springframework.security.access.intercept.InterceptorStatusToken;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import org.springframework.stereotype.Service;
 
 /**
  * 资源管理拦截器
@@ -28,60 +26,58 @@ import org.springframework.stereotype.Service;
  * 获取用户的权限信息，还会获取被拦截的url和被拦截url所需的全部权限，然后根据所配的策略
  * （有：一票决定，一票否定，少数服从多数等），如果权限足够，则返回，权限不够则报错并调用权限不足页面
  */
-@Service
 public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor implements Filter {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private FilterInvocationSecurityMetadataSource securityMetadataSource;
+	public MyFilterSecurityInterceptor(FilterInvocationSecurityMetadataSource _securityMetadataSource,
+			MyAccessDecisionManager _myAccessDecisionManager) {
+		this.securityMetadataSource = _securityMetadataSource;
+		super.setAccessDecisionManager(_myAccessDecisionManager);
+	}
 
-    @Autowired
-    public void setMyAccessDecisionManager(MyAccessDecisionManager myAccessDecisionManager) {
-        super.setAccessDecisionManager(myAccessDecisionManager);
-    }
+	private FilterInvocationSecurityMetadataSource securityMetadataSource;
 
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+	}
 
-    }
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		FilterInvocation fi = new FilterInvocation(request, response, chain);
+		invoke(fi);
+	}
 
-        FilterInvocation fi = new FilterInvocation(request, response, chain);
-        invoke(fi);
-    }
-
-
-    public void invoke(FilterInvocation fi) throws IOException, ServletException {
+	public void invoke(FilterInvocation fi) throws IOException, ServletException {
 		log.info(fi.getRequestUrl());
-//fi里面有一个被拦截的url
-//里面调用MyInvocationSecurityMetadataSource的getAttributes(Object object)这个方法获取fi对应的所有权限
-//再调用MyAccessDecisionManager的decide方法来校验用户的权限是否足够
-        InterceptorStatusToken token = super.beforeInvocation(fi);
-        try {
-//执行下一个拦截器
-            fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
-        } finally {
-            super.afterInvocation(token, null);
-        }
-    }
+		// fi里面有一个被拦截的url
+		// 里面调用MyInvocationSecurityMetadataSource的getAttributes(Object
+		// object)这个方法获取fi对应的所有权限
+		// 再调用MyAccessDecisionManager的decide方法来校验用户的权限是否足够
+		InterceptorStatusToken token = super.beforeInvocation(fi);
+		try {
+			// 执行下一个拦截器
+			fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
+		} finally {
+			super.afterInvocation(token, null);
+		}
+	}
 
+	@Override
+	public void destroy() {
 
-    @Override
-    public void destroy() {
+	}
 
-    }
+	@Override
+	public Class<?> getSecureObjectClass() {
+		return FilterInvocation.class;
 
-    @Override
-    public Class<?> getSecureObjectClass() {
-        return FilterInvocation.class;
+	}
 
-    }
-
-    @Override
-    public SecurityMetadataSource obtainSecurityMetadataSource() {
-        return this.securityMetadataSource;
-    }
+	@Override
+	public SecurityMetadataSource obtainSecurityMetadataSource() {
+		return this.securityMetadataSource;
+	}
 }
