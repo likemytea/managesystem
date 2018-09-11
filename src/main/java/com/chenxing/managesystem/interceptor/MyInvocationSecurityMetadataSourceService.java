@@ -5,9 +5,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -24,7 +27,7 @@ import com.chenxing.managesystem.domain.Permission;
  */
 @Service
 public class MyInvocationSecurityMetadataSourceService implements FilterInvocationSecurityMetadataSource {
-
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private PermissionDao permissionDao;
 
@@ -62,9 +65,16 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
 				return map.get(resUrl);
 			}
 		}
+		pringAuthority(map);
 		return null;
 	}
 
+	private void pringAuthority(HashMap<String, Collection<ConfigAttribute>> map) {
+		Set<String> set = map.keySet();
+		for (String s : set) {
+			log.info(s + "," + map.get(s));
+		}
+	}
 	@Override
 	public Collection<ConfigAttribute> getAllConfigAttributes() {
 		return null;
