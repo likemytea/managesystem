@@ -49,6 +49,7 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
 
 	@Override
 	public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
+		System.out.println("检查拜访者权限...");
 		if (map == null)
 			loadResourceDefine();
 		HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();

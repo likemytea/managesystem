@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +32,8 @@ public class SystemController {
 	@ResponseBody
 	@RequestMapping(value = "/system/user/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public String getUserList(@RequestParam int currentpage, @RequestParam int pagesize, HttpServletResponse response) {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		log.info("security holder-username：" + userDetails.getUsername());
 		PageResult<SysUser> list = customUserService.findUserList(currentpage, pagesize);
 		log.info("user数组"+JSON.toJSONString(list));
 		return JSON.toJSONString(list);
