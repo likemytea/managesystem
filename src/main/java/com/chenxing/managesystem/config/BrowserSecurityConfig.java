@@ -1,7 +1,6 @@
 package com.chenxing.managesystem.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,14 +11,12 @@ import com.chenxing.managesystem.interceptor.MyAccessDecisionManager;
 import com.chenxing.managesystem.interceptor.MyAuthenticationAccessDeniedHandler;
 import com.chenxing.managesystem.interceptor.MyFilterSecurityInterceptor;
 
-
 /**
  * 启动初始化访问路径
  * 
  * @author huayu
  *
  */
-@Configuration
 @EnableWebSecurity
 public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 

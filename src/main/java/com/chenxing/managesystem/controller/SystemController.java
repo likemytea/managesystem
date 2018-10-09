@@ -35,7 +35,7 @@ public class SystemController {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		log.info("security holder-username：" + userDetails.getUsername());
 		PageResult<SysUser> list = customUserService.findUserList(currentpage, pagesize);
-		log.info("user数组"+JSON.toJSONString(list));
+		log.info("user-数组" + JSON.toJSONString(list));
 		return JSON.toJSONString(list);
 
 	}
