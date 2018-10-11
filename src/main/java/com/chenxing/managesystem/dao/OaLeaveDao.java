@@ -5,7 +5,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.chenxing.common.jdbc.MyJdbcTemplate;
+import com.chenxing.common.pagination.PaginationResult;
+import com.chenxing.common.pagination.SortType;
+import com.chenxing.common.vo.PageResult;
 import com.chenxing.managesystem.domain.Leave;
+import com.chenxing.managesystem.mapper.OaLeaveRowMapper;
 
 /**
  * Description:
@@ -21,6 +25,9 @@ public class OaLeaveDao {
 	@Qualifier("myJdbcTemplatep3")
 	private MyJdbcTemplate jdbcTemplate;
 
+	/**
+	 * save 实体
+	 */
 	public int insertOaLeave(Leave lv) {
 
 		// Create Table
@@ -45,4 +52,23 @@ public class OaLeaveDao {
 						lv.getStartTime(), lv.getUserId() });
 	}
 
+	/**
+	 * 查询实体，返回list
+	 */
+	public PageResult<Leave> listLeaves(int currentpage, int pagesize, String pkArray) {
+		StringBuffer sql = new StringBuffer("SELECT * from oa_leave u where u.id in(");
+		sql.append(pkArray.substring(0, pkArray.length() - 1));
+		sql.append(")");
+
+		PaginationResult<Leave> res = jdbcTemplate.queryForPage(sql.toString(), currentpage, pagesize,
+				"apply_time",
+				SortType.DESC,
+				new OaLeaveRowMapper());
+
+		PageResult<Leave> pr = new PageResult<Leave>();
+		pr.setArray(res.getData());
+		pr.setTotalCount(res.getTotalCount());
+		pr.setTotalPage(res.getTotalPage());
+		return pr;
+	}
 }

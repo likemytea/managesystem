@@ -1,9 +1,12 @@
 package com.chenxing.managesystem;
 
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -14,11 +17,13 @@ import com.chenxing.managesystem.service.OaLeaveWorkFlowService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class TestActiviti {
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	@Autowired
-	OaLeaveWorkFlowService runtimeService;
+	OaLeaveWorkFlowService oaLeaveWorkFlowService;
 
-	@Test
+	// @Test
 	public void TestStartProcess() {
+		log.info("###########开始测试启动流程");
 		// Create Table
 		//
 		// CREATE TABLE `oa_leave` (
@@ -35,17 +40,41 @@ public class TestActiviti {
 		// PRIMARY KEY (`id`)
 		// ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8
 		Leave l = new Leave();
-		l.setId(7l);
 		l.setApplyTime(new Date());
 		l.setEndTime("2050-07-29 00:00:00");
 		l.setLeaveType("公休");
 		// l.setProcessInstanceId(processInstanceId);
 		l.setRealityEndTime(new Date());
 		l.setRealityStartTime(new Date());
-		l.setReason("junit测试data");
+		l.setReason("junit测试哈");
 		l.setStartTime("2030-07-29 00:00:00");
 		l.setUserId("admin");
 
-		runtimeService.startProcess(l);
+		oaLeaveWorkFlowService.startProcess(l);
 	}
+
+	@Test
+	public void testGetTasks() {
+		try {
+
+			log.info("###########开始测试获取任务列表");
+			String assignee = "admin";
+			List<Leave> list = oaLeaveWorkFlowService.getTasks(assignee, 1, 10);
+			log.info("++++++++++++++++++++++");
+			for (Leave l : list) {
+				log.info("id:" + l.getId());
+				log.info("reason:" + l.getReason());
+				log.info("userid:" + l.getUserId());
+				log.info("starttime:" + l.getStartTime());
+				log.info("getProcessInstance.id:" + l.getProcessInstance().getId());
+				log.info("getProcessInstance.name:" + l.getProcessInstance().getName());
+				log.info("getProcessDefinition.name:" + l.getProcessDefinition().getName());
+				log.info("  |");
+			}
+			log.info("++++++++++++++++++++++end");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		}
 }
