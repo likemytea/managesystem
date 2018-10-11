@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="processa" name="请假流程测试" isExecutable="true">
+    <startEvent id="sid-7561C195-3A37-4C1B-A119-2E80262792D1" activiti:initiator="applyUserIdxxxxxxxx"/>
+    <userTask id="sid-DDDA479C-5832-496D-AB75-0E3213F551B4" name="经理审批" activiti:candidateGroups="deptLeader"/>
+    <exclusiveGateway id="sid-DC4B5FC3-3BBD-457A-8020-FEEA98A18D79"/>
+    <endEvent id="sid-07AF6B46-DA6F-43E4-9CDA-54E2F6A05E88"/>
+    <userTask id="sid-FB4CB959-6C4C-4ECA-8595-2A6E2757D4D8" name="调整申请" activiti:assignee="${applyUserIdxxxxxxxx}">
+	  <extensionElements>
+        <activiti:taskListener event="complete" delegateExpression="${afterModifyApplyContentProcessorxxxxx}"/>
+      </extensionElements>
+	</userTask>
+	<sequenceFlow id="sid-EF859989-DB9D-461C-9CFC-7B5734DBFB0A" sourceRef="sid-7561C195-3A37-4C1B-A119-2E80262792D1" targetRef="sid-DDDA479C-5832-496D-AB75-0E3213F551B4"/>
+	<sequenceFlow id="sid-B31CC965-C783-4699-A2E0-57B92A3F87AF" sourceRef="sid-DDDA479C-5832-496D-AB75-0E3213F551B4" targetRef="sid-DC4B5FC3-3BBD-457A-8020-FEEA98A18D79"/>
+    <sequenceFlow id="sid-3A61347C-3D2B-4659-B7B4-16C65BBDF9F4" name="驳回" sourceRef="sid-DC4B5FC3-3BBD-457A-8020-FEEA98A18D79" targetRef="sid-FB4CB959-6C4C-4ECA-8595-2A6E2757D4D8">
+	    <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!beok}]]></conditionExpression>
+	</sequenceFlow>
+    <sequenceFlow id="sid-8148ABB3-5B45-4CFC-BFA9-96F835EA4D49" name="通过" sourceRef="sid-DC4B5FC3-3BBD-457A-8020-FEEA98A18D79" targetRef="sid-07AF6B46-DA6F-43E4-9CDA-54E2F6A05E88">
+	    <conditionExpression xsi:type="tFormalExpression"><![CDATA[${beok}]]></conditionExpression>
+	</sequenceFlow>
+    <sequenceFlow id="sid-36D0BB61-2A86-4A4A-9A36-F4F4461A5731" name="取消申请" sourceRef="sid-FB4CB959-6C4C-4ECA-8595-2A6E2757D4D8" targetRef="sid-07AF6B46-DA6F-43E4-9CDA-54E2F6A05E88">
+	    <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!beok}]]></conditionExpression>
+	</sequenceFlow>
+    <sequenceFlow id="sid-2A2B2710-E885-4A08-AAED-61FD1048D438" name="重新申请" sourceRef="sid-FB4CB959-6C4C-4ECA-8595-2A6E2757D4D8" targetRef="sid-DDDA479C-5832-496D-AB75-0E3213F551B4">
+	    <conditionExpression xsi:type="tFormalExpression"><![CDATA[${beok}]]></conditionExpression>
+	</sequenceFlow>
+  </process>
+</definitions>
