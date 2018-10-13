@@ -6,8 +6,8 @@
           pageSize: 5,//每页条数
           total:0,//总数
           pageData: {
-            curPage: 1,
-            pageSize: 10,
+            curPage: 3,//赋值为3没有任何意义，可以随意填写
+            pageSize: 4,//赋值为4没有任何意义，可以随意填写
             total: 0,
             totalPage: 0,
             pageIndex: [],

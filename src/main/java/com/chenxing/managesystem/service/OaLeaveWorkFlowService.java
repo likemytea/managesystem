@@ -2,6 +2,7 @@ package com.chenxing.managesystem.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -82,7 +83,7 @@ public class OaLeaveWorkFlowService {
 	}
 
 	// 获得某个人的任务别表,参数是受托人
-	public List<Leave> getTasks(String assignee, int currentpage, int pagesize) {
+	public PageResult<Leave> getTasks(String assignee, int currentpage, int pagesize) {
 		TaskQuery taskQuery = taskService.createTaskQuery().taskCandidateOrAssigned(assignee);
 		List<Task> tasks = taskQuery.list();
 		StringBuffer leavePK = new StringBuffer();
@@ -102,21 +103,40 @@ public class OaLeaveWorkFlowService {
 
 			Leave leave = new Leave();
 			leave.setId(Long.parseLong(businessKey));
-			leave.setTask(task);
-			leave.setProcessInstance(processInstance);
-			leave.setProcessDefinition(getProcessDefinition(processInstance.getProcessDefinitionId()));
+
+			Map<String, Object> taskmap = new LinkedHashMap<>();
+			taskmap.put("taskId", task.getId());
+			taskmap.put("taskDefinitionKey", task.getTaskDefinitionKey());
+			taskmap.put("taskName", task.getName());
+			taskmap.put("createTime", task.getCreateTime());
+			taskmap.put("assignee", task.getAssignee());
+			leave.setTask(taskmap);
+			
+			
+			Map<String, Object> processInstanceMap = new LinkedHashMap<>();
+			processInstanceMap.put("id", processInstance.getId());
+			processInstanceMap.put("processDefinitionId", processInstance.getProcessDefinitionId());
+			processInstanceMap.put("name", processInstance.getName());
+			processInstanceMap.put("suspended", processInstance.isSuspended());
+			leave.setProcessInstanceMap(processInstanceMap);
+			
+
+			leave.setProcessDefinitionMap(getProcessDefinition(processInstance.getProcessDefinitionId()));
 			results.add(leave);
 		}
+
 		if (results.size() > 0) {
-			editLeaveResults(results, leavePK.toString(), currentpage, pagesize);
+			return editLeaveResults(results, leavePK.toString(), currentpage, pagesize);
+		} else {
+			return new PageResult<Leave>();
 		}
-		return results;
 	}
 
 	/** 编辑待办任务的结果集 */
-	private void editLeaveResults(List<Leave> results, String pkArray, int currentpage, int pagesize) {
+	private PageResult<Leave> editLeaveResults(List<Leave> leaveArray, String pkArray, int currentpage, int pagesize) {
+		PageResult<Leave> returnRes = new PageResult<Leave>();
 		PageResult<Leave> res = oaLeaveDao.listLeaves(currentpage, pagesize, pkArray);
-		for (Leave leave : results) {
+		for (Leave leave : leaveArray) {
 			for (Leave dl : res.getArray()) {
 				if (leave.getId() == dl.getId()) {
 					leave.setApplyTime(dl.getApplyTime());
@@ -126,11 +146,14 @@ public class OaLeaveWorkFlowService {
 					leave.setProcessInstanceId(dl.getProcessInstanceId());
 					leave.setReason(dl.getReason());
 					leave.setUserId(dl.getUserId());
-					break;// TODO;liuxing为什么break
+					break;// 找到后就跳出最里边的for循环
 				}
 			}
 		}
-
+		returnRes.setArray(leaveArray);
+		returnRes.setTotalCount(res.getTotalCount());
+		returnRes.setTotalPage(res.getTotalPage());
+		return returnRes;
 	}
 	/**
 	 * 查询流程定义对象
@@ -139,10 +162,12 @@ public class OaLeaveWorkFlowService {
 	 *            流程定义ID
 	 * @return
 	 */
-	protected ProcessDefinition getProcessDefinition(String processDefinitionId) {
+	protected Map<String, Object> getProcessDefinition(String processDefinitionId) {
+		Map<String, Object> map = new LinkedHashMap<>();
 		ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
 				.processDefinitionId(processDefinitionId).singleResult();
-		return processDefinition;
+		map.put("version", processDefinition.getVersion());
+		return map;
 	}
 
 	// 完成任务

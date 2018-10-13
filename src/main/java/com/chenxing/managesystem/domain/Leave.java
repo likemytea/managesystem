@@ -5,18 +5,17 @@ import java.util.Date;
 import java.util.Map;
 
 import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.repository.ProcessDefinition;
-import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Task;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.chenxing.managesystem.domain.base.IdEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Entity: Leave
  *
  * @author xing.liu
  */
+@JsonIgnoreProperties({ "handler", "hibernateLazyInitializer" })
 public class Leave extends IdEntity implements Serializable {
 
 	private static final long serialVersionUID = 3182317672326236654L;
@@ -39,18 +38,18 @@ public class Leave extends IdEntity implements Serializable {
     //-- 临时属性 --//
 
     // 流程任务
-    private Task task;
+	private Map<String, Object> task;
 
     private Map<String, Object> variables;
 
     // 运行中的流程实例
-    private ProcessInstance processInstance;
+	private Map<String, Object> processInstanceMap;
 
     // 历史的流程实例
     private HistoricProcessInstance historicProcessInstance;
 
     // 流程定义
-    private ProcessDefinition processDefinition;
+	private Map<String, Object> processDefinitionMap;
 
     public String getProcessInstanceId() {
         return processInstanceId;
@@ -124,15 +123,15 @@ public class Leave extends IdEntity implements Serializable {
         this.realityEndTime = realityEndTime;
     }
 
-    public Task getTask() {
-        return task;
-    }
+	public Map<String, Object> getTask() {
+		return task;
+	}
 
-    public void setTask(Task task) {
-        this.task = task;
-    }
+	public void setTask(Map<String, Object> task) {
+		this.task = task;
+	}
 
-    public Map<String, Object> getVariables() {
+	public Map<String, Object> getVariables() {
         return variables;
     }
 
@@ -140,15 +139,17 @@ public class Leave extends IdEntity implements Serializable {
         this.variables = variables;
     }
 
-    public ProcessInstance getProcessInstance() {
-        return processInstance;
-    }
 
-    public void setProcessInstance(ProcessInstance processInstance) {
-        this.processInstance = processInstance;
-    }
 
-    public HistoricProcessInstance getHistoricProcessInstance() {
+	public Map<String, Object> getProcessInstanceMap() {
+		return processInstanceMap;
+	}
+
+	public void setProcessInstanceMap(Map<String, Object> processInstanceMap) {
+		this.processInstanceMap = processInstanceMap;
+	}
+
+	public HistoricProcessInstance getHistoricProcessInstance() {
         return historicProcessInstance;
     }
 
@@ -156,12 +157,13 @@ public class Leave extends IdEntity implements Serializable {
         this.historicProcessInstance = historicProcessInstance;
     }
 
-    public ProcessDefinition getProcessDefinition() {
-        return processDefinition;
-    }
+	public Map<String, Object> getProcessDefinitionMap() {
+		return processDefinitionMap;
+	}
 
-    public void setProcessDefinition(ProcessDefinition processDefinition) {
-        this.processDefinition = processDefinition;
-    }
+	public void setProcessDefinitionMap(Map<String, Object> processDefinitionMap) {
+		this.processDefinitionMap = processDefinitionMap;
+	}
+
 
 }

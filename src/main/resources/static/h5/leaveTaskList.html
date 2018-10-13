@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>请假流程列表</title>
+    <link href="http://test.mystaticdomain.com/css/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
+    <script type="text/javascript" src="http://test.mystaticdomain.com/js/vue-2.5.17.js"></script>
+    <script type="text/javascript" src="http://test.mystaticdomain.com/js/jquery.min.js"></script>
+  </head>
+  <body>
+ 
+    <div class="bs-example" id="table">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+				<th>假种</th>
+				<th>申请人</th>
+				<th>申请时间</th>
+				<th>开始时间</th>
+				<th>结束时间</th>
+				
+         
+            
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="listData.length>0" v-for="item in listData">
+            <th scope="row">{{item.leaveType}}</th>
+            <td>{{item.userId}}</td>
+			<td>{{item.applyTime}}</td>
+			<td>{{item.startTime}}</td>
+			<td>{{item.endTime}}</td>
+			<!-- 
+			<td>
+			    <a target="_blank"  title="点击查看流程图">${item.task.name }</a>
+		    </td>
+	 -->
+            <button v-on:click="editItem(item.id)" class="btn btn-default" >编辑</button>
+            <button v-on:click="deleteItem(item.id)" class="btn btn-default" >删除</button>
+            </td>
+          </tr>
+          <tr>
+            <td colspan=3>
+              <div id="pagelist">
+                  <div class="row">
+                    <div class="col-sm-6" style="line-height: 80px">
+                      <div class="dataTables_info" id="sample-table-2_info">
+                        共{{pageData.total}}条，当前显示第
+                        <span v-if="pageData.pageSize==1 || pageData.total == 0 || pageData.total == 1">
+                        {{pageData.itemStart}}</span>
+                        <span v-else>{{pageData.itemStart}}-{{pageData.itemEnd}}</span>
+                        条
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="dataTables_paginate paging_bootstrap">
+                        <ul class="pagination">
+                          <li v-if="pageData.curPage == 1 || pageData.total == 0 || pageData.total == 1" class="prev disabled">
+                            <a>首页</a>
+                          </li>
+                          <li v-else class="prev">
+                            <a href="javascript:void(0)" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" v-on:click="changeCurPage(1,pageData.pageSize);">
+                              首页
+                            </a>
+                          </li>
+                          <li v-if="pageData.curPage == 1 || pageData.total == 0 || pageData.total == 1" class="prev disabled">
+                            <a>上一页</a>
+                          </li>
+                          <li v-else class="prev">
+                            <a href="javascript:void(0)" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" v-on:click="changeCurPage(pageData.curPage-1,pageData.pageSize);">
+                              上一页</i>
+                            </a>
+                          </li>
+                          <li v-if="pageData.totalPage > 5 && pageData.curPage > 3" class="next disabled">
+                            <a>...</a>
+                          </li>
+                          <template v-for="pageItem in pageData.pageIndex">
+                            <li v-if="pageData.curPage == pageItem" class="active">
+                              <a>{{pageItem}}</a>
+                            </li>
+                            <li v-else>
+                              <a href="javascript:void(0)" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" v-on:click="changeCurPage(pageItem,pageData.pageSize);">
+                                {{pageItem}}
+                              </a>
+                            </li>
+                          </template>
+                          <li v-if="pageData.totalPage > 5 && pageData.curPage < pageData.totalPage-2" class="next disabled">
+                            <a>...</a>
+                          </li>
+                          <li v-if="pageData.curPage == pageData.totalPage || pageData.total == 0 || pageData.total == 1" class="next disabled">
+                            <a>下一页</i></a>
+                          </li>
+                          <li v-else class="next">
+                            <a href="javascript:void(0)" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" v-on:click="changeCurPage(pageData.curPage+1,pageData.pageSize);">
+                              下一页</i>
+                            </a>
+                          </li>
+                          <li v-if="pageData.curPage == pageData.totalPage || pageData.total == 0 || pageData.total == 1" class="next disabled">
+                            <a>末页</a>
+                          </li>
+                          <li v-else class="next">
+                            <a href="javascript:void(0)" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" v-on:click="changeCurPage(pageData.totalPage,pageData.pageSize);">
+                              末页
+                            </a>
+                          </li>
+                          <template v-if="pageData.totalPage > 5" class="next disabled">
+                            <li>
+                              <input value="" ref="goPage" class="input-mini" type="text" style="height: 32px;width:40px;margin:auto 5px auto 20px;line-height: 24px;">
+                              <label><a href="javascript:void(0)" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" v-on:click="goPage(pageData.pageSize,pageData.totalPage)">Go</a></label>
+                            </li>
+                          </template>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </td>
+          <tr>
+        </tbody>
+      </table>
+    </div>
+ 
+ 
+    <script type="text/javascript">
+    function getData($page,$pageSize){//获取数据，可使用各种语言替换^_^
+         var $mydata = [];
+         var $totalCount = 0;
+	   	 var toSend=$.ajax({
+		     type:'get',
+		     url:'http://localhost:8060/workflow/leave/findTasks',
+		     async: false,
+		     data:{currentpage:$page,pagesize:$pageSize},
+		     cache:false,
+		     dataType:'json',
+		     success:function(data){
+		    	 $totalCount = data.totalCount;
+		    	 for(var i = 0; i < data.array.length; i++){
+		    	        $mydata.push( {
+		    	        	leaveType:data.array[i]['leaveType'],
+		    	        	userId:data.array[i]['userId'],
+		    	        	applyTime:data.array[i]['applyTime'],
+		    	        	startTime:data.array[i]['startTime'],
+		    	        	endTime:data.array[i]['endTime']
+		    	          });
+		    	 }
+		     },
+             error:function(XMLHttpRequest, textStatus, errorThrown) {
+               alert(XMLHttpRequest.responseText);
+               //  alert(XMLHttpRequest.status);
+               //  alert(XMLHttpRequest.readyState);
+               //  alert(textStatus);
+             }
+		 });
+	   	 
+      var $returnData = {'data':$mydata,'total':$totalCount};
+      return $returnData;
+    }
+ 
+    window.onload = function(){
+     vm.listItems();
+    }; 
+    </script>
+    <!-- 自定义js。特别说明：放在底部的js会在页面都渲染完才运行这些js -->
+    <script type="text/javascript" src="/css/tonginx-mypaging.js"></script>
+  </body>
+</html>

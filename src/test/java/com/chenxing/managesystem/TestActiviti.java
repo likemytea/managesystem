@@ -1,7 +1,6 @@
 package com.chenxing.managesystem;
 
 import java.util.Date;
-import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.chenxing.common.vo.PageResult;
 import com.chenxing.managesystem.domain.Leave;
 import com.chenxing.managesystem.service.OaLeaveWorkFlowService;
 
@@ -59,16 +59,16 @@ public class TestActiviti {
 
 			log.info("###########开始测试获取任务列表");
 			String assignee = "admin";
-			List<Leave> list = oaLeaveWorkFlowService.getTasks(assignee, 1, 10);
+			PageResult<Leave> rtn = oaLeaveWorkFlowService.getTasks(assignee, 1, 10);
 			log.info("++++++++++++++++++++++");
-			for (Leave l : list) {
+			for (Leave l : rtn.getArray()) {
 				log.info("id:" + l.getId());
 				log.info("reason:" + l.getReason());
 				log.info("userid:" + l.getUserId());
 				log.info("starttime:" + l.getStartTime());
-				log.info("getProcessInstance.id:" + l.getProcessInstance().getId());
-				log.info("getProcessInstance.name:" + l.getProcessInstance().getName());
-				log.info("getProcessDefinition.name:" + l.getProcessDefinition().getName());
+				log.info("getProcessInstance.id:" + l.getProcessInstanceMap().get("id"));
+				log.info("getProcessInstance.name:" + l.getProcessInstanceMap().get("name"));
+				log.info("getProcessDefinition.version:" + l.getProcessDefinitionMap().get("version"));
 				log.info("  |");
 			}
 			log.info("++++++++++++++++++++++end");
