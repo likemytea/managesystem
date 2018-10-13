@@ -71,4 +71,13 @@ public class OaLeaveDao {
 		pr.setTotalPage(res.getTotalPage());
 		return pr;
 	}
+
+	/**
+	 * 查询实体，返回list
+	 */
+	public Leave findById(String id) {
+		StringBuffer sql = new StringBuffer("SELECT * from oa_leave u where u.id =?");
+		return jdbcTemplate.queryForObject(sql.toString(), new OaLeaveRowMapper(), id);
+	}
+
 }

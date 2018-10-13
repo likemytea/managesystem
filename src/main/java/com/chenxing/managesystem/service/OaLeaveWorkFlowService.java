@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chenxing.common.distributedKey.PrimarykeyGenerated;
+import com.chenxing.common.util.PageUtil;
 import com.chenxing.common.vo.PageResult;
 import com.chenxing.managesystem.dao.OaLeaveDao;
 import com.chenxing.managesystem.domain.Leave;
@@ -83,10 +84,14 @@ public class OaLeaveWorkFlowService {
 	}
 
 	// 获得某个人的任务别表,参数是受托人
-	public PageResult<Leave> getTasks(String assignee, int currentpage, int pagesize) {
+	public PageResult<Leave> getTasks(String assignee, long currentpage, long pagesize) {
+		PageResult<Leave> resRtn = new PageResult<Leave>();
 		TaskQuery taskQuery = taskService.createTaskQuery().taskCandidateOrAssigned(assignee);
-		List<Task> tasks = taskQuery.list();
-		StringBuffer leavePK = new StringBuffer();
+		resRtn.setTotalCount(taskQuery.count());
+		PageUtil pageUtil = new PageUtil(pagesize, currentpage, resRtn.getTotalCount());
+		resRtn.setTotalPage(pageUtil.getPageCount());
+		List<Task> tasks = taskQuery.orderByTaskCreateTime().desc().listPage(pageUtil.getFirstResult().intValue(),
+				pageUtil.getPageSize().intValue());
 		List<Leave> results = new ArrayList<Leave>();
 		// 根据流程的业务ID查询实体并关联
 		for (Task task : tasks) {
@@ -98,8 +103,6 @@ public class OaLeaveWorkFlowService {
 			if (businessKey == null) {
 				continue;
 			}
-			leavePK.append(businessKey);
-			leavePK.append(",");
 
 			Leave leave = new Leave();
 			leave.setId(Long.parseLong(businessKey));
@@ -119,42 +122,23 @@ public class OaLeaveWorkFlowService {
 			processInstanceMap.put("name", processInstance.getName());
 			processInstanceMap.put("suspended", processInstance.isSuspended());
 			leave.setProcessInstanceMap(processInstanceMap);
-			
-
+			Leave dl = oaLeaveDao.findById(businessKey);
+			if (dl != null) {
+				leave.setApplyTime(dl.getApplyTime());
+				leave.setEndTime(dl.getEndTime());
+				leave.setStartTime(dl.getStartTime());
+				leave.setLeaveType(dl.getLeaveType());
+				leave.setProcessInstanceId(dl.getProcessInstanceId());
+				leave.setReason(dl.getReason());
+				leave.setUserId(dl.getUserId());
+			}
 			leave.setProcessDefinitionMap(getProcessDefinition(processInstance.getProcessDefinitionId()));
 			results.add(leave);
 		}
-
-		if (results.size() > 0) {
-			return editLeaveResults(results, leavePK.toString(), currentpage, pagesize);
-		} else {
-			return new PageResult<Leave>();
-		}
+		resRtn.setArray(results);
+		return resRtn;
 	}
 
-	/** 编辑待办任务的结果集 */
-	private PageResult<Leave> editLeaveResults(List<Leave> leaveArray, String pkArray, int currentpage, int pagesize) {
-		PageResult<Leave> returnRes = new PageResult<Leave>();
-		PageResult<Leave> res = oaLeaveDao.listLeaves(currentpage, pagesize, pkArray);
-		for (Leave leave : leaveArray) {
-			for (Leave dl : res.getArray()) {
-				if (leave.getId() == dl.getId()) {
-					leave.setApplyTime(dl.getApplyTime());
-					leave.setEndTime(dl.getEndTime());
-					leave.setStartTime(dl.getStartTime());
-					leave.setLeaveType(dl.getLeaveType());
-					leave.setProcessInstanceId(dl.getProcessInstanceId());
-					leave.setReason(dl.getReason());
-					leave.setUserId(dl.getUserId());
-					break;// 找到后就跳出最里边的for循环
-				}
-			}
-		}
-		returnRes.setArray(leaveArray);
-		returnRes.setTotalCount(res.getTotalCount());
-		returnRes.setTotalPage(res.getTotalPage());
-		return returnRes;
-	}
 	/**
 	 * 查询流程定义对象
 	 *

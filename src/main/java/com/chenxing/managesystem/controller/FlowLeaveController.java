@@ -41,7 +41,7 @@ public class FlowLeaveController {
 
 	@ResponseBody
 	@RequestMapping(value = "/start", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-	public String getUserList(@RequestParam String applyTime, @RequestParam String endTime,
+	public String start(@RequestParam String applyTime, @RequestParam String endTime,
 			@RequestParam String leaveType, @RequestParam String realityEndTime, @RequestParam String realityStartTime,
 			@RequestParam String reason, @RequestParam String startTime) throws ParseException {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -81,7 +81,7 @@ public class FlowLeaveController {
 	 * @return
 	 */
 	@RequestMapping(value = "/complete", method = { RequestMethod.POST, RequestMethod.GET })
-	public String complete(@RequestParam String taskid, Variable var) {
+	public String execTask(@RequestParam String taskid, Variable var) {
 		if (StringUtils.isEmpty(taskid)) {
 			return "paramError";
 		}
