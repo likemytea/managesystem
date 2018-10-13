@@ -1,6 +1,7 @@
 package com.chenxing.managesystem.controller;
 
 import java.text.ParseException;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.chenxing.common.util.DateUtil;
 import com.chenxing.common.vo.PageResult;
 import com.chenxing.managesystem.domain.Leave;
 import com.chenxing.managesystem.service.OaLeaveWorkFlowService;
+import com.chenxing.managesystem.util.Variable;
 
 /**
  * 流程引擎类：请假
@@ -57,6 +60,10 @@ public class FlowLeaveController {
 		return "hello,leave!";
 	}
 
+	/**
+	 * 获取待办任务列表
+	 * 
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/findTasks", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public String findTasks(@RequestParam int currentpage, @RequestParam int pagesize) throws ParseException {
@@ -67,4 +74,19 @@ public class FlowLeaveController {
 		return JSON.toJSONString(res);
 	}
 
+	/**
+	 * 执行任务
+	 *
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/complete", method = { RequestMethod.POST, RequestMethod.GET })
+	public String complete(@RequestParam String taskid, Variable var) {
+		if (StringUtils.isEmpty(taskid)) {
+			return "paramError";
+		}
+		Map<String, Object> variables = var.getVariableMap();
+		oaLeaveWorkFlowService.complete(taskid, variables);
+		return "finished";
+	}
 }

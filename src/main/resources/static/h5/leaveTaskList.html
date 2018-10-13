@@ -9,7 +9,7 @@
   </head>
   <body>
  
-    <div class="bs-example" id="table">
+    <div class="bs-example" id="leaveTaskListTable">
       <table class="table table-striped">
         <thead>
           <tr>
@@ -38,7 +38,7 @@
 		    <td>{{item.task.createTime }}</td>
             <td>{{item.processInstanceMap.suspended ? "已挂起" : "正常" }}；<b title='流程版本号'>V: {{item.processDefinitionMap.version }}</b></td>
             <td>		    
-            <button v-on:click="editItem(item.id)" class="btn btn-default" >编辑</button>
+            <button v-on:click="execTask(item.task.taskId)" class="btn btn-default" >办理</button>
             <button v-on:click="deleteItem(item.id)" class="btn btn-default" >删除</button>
             </td>
           </tr>
@@ -167,6 +167,6 @@
     }; 
     </script>
     <!-- 自定义js。特别说明：放在底部的js会在页面都渲染完才运行这些js -->
-    <script type="text/javascript" src="/css/tonginx-mypaging.js"></script>
+    <script type="text/javascript" src="/css/leaveTaskList.js"></script>
   </body>
 </html>

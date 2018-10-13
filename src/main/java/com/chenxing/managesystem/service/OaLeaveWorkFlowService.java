@@ -170,10 +170,15 @@ public class OaLeaveWorkFlowService {
 		return map;
 	}
 
-	// 完成任务
-	public void completeTasks(Boolean joinApproved, String taskId) {
-		Map<String, Object> taskVariables = new HashMap<String, Object>();
-		taskVariables.put("joinApproved", joinApproved);
-		taskService.complete(taskId, taskVariables);
+	/**
+	 * 执行任务
+	 *
+	 * @param id
+	 * @return
+	 */
+	public String complete(String taskId, Map<String, Object> var) {
+		taskService.complete(taskId, var);
+		return "success";
 	}
+
 }
