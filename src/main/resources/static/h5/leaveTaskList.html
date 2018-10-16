@@ -37,8 +37,9 @@
 		    </td>
 		    <td>{{item.task.createTime }}</td>
             <td>{{item.processInstanceMap.suspended ? "已挂起" : "正常" }}；<b title='流程版本号'>V: {{item.processDefinitionMap.version }}</b></td>
-            <td>		    
-            <button v-on:click="execTask(item.task.taskId)" class="btn btn-default" >办理</button>
+            <td>
+            <button v-if="item.task.taskName!='发起人调整申请'" v-on:click="execTask(item.task.taskId,item.id)" class="btn btn-default" >办理</button>
+            <button v-if="item.task.taskName=='发起人调整申请'" v-on:click="reApply(item.task.taskId,item.id,4)" class="btn btn-default" >调整申请</button>
             <button v-on:click="deleteItem(item.id)" class="btn btn-default" >删除</button>
             </td>
           </tr>
@@ -141,6 +142,7 @@
 		    	        $mydata.push( {
 		    	        	leaveType:data.array[i]['leaveType'],
 		    	        	userId:data.array[i]['userId'],
+		    	        	id:data.array[i]['id'],
 		    	        	applyTime:data.array[i]['applyTime'],
 		    	        	startTime:data.array[i]['startTime'],
 		    	        	endTime:data.array[i]['endTime'],

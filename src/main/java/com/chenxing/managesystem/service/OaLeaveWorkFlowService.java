@@ -95,6 +95,7 @@ public class OaLeaveWorkFlowService {
 		List<Leave> results = new ArrayList<Leave>();
 		// 根据流程的业务ID查询实体并关联
 		for (Task task : tasks) {
+			log.info("taskid" + task.getId());
 			String processInstanceId = task.getProcessInstanceId();
 			ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
 					.processInstanceId(processInstanceId).active().singleResult();
@@ -118,6 +119,8 @@ public class OaLeaveWorkFlowService {
 			
 			Map<String, Object> processInstanceMap = new LinkedHashMap<>();
 			processInstanceMap.put("id", processInstance.getId());
+			log.info("processInstanceid:" + processInstance.getId());
+
 			processInstanceMap.put("processDefinitionId", processInstance.getProcessDefinitionId());
 			processInstanceMap.put("name", processInstance.getName());
 			processInstanceMap.put("suspended", processInstance.isSuspended());

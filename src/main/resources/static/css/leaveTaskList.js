@@ -22,7 +22,8 @@
             this.total=returnData['total'];
             this.setPageList(this.total, this.page, this.pageSize);
           },
-          execTask:function ($taskid){
+          execTask:function ($taskid,$busskey){
+        	  alert('可以根据业务id获取表单信息'+$busskey);
         	    var $beok = false;
         	    if (confirm('同意点击确定，不同意选择取消')){
         	    	$beok = true;
@@ -34,7 +35,7 @@
      			     type:'post',
      			     url:'http://localhost:8060/workflow/leave/complete',
      			     async: false,
-     			     data:{taskid:$taskid,keys:'beok',values:$beok,types:'B'},
+     			     data:{taskid:$taskid,keys:'agree',values:$beok,types:'B'},
      			     cache:false,
      			     dataType:'json',
      			     success:function(data){
@@ -52,6 +53,32 @@
      		   		alert('系统异常，请联系运维人员！');
      		   	 }
          },
+         reApply:function ($taskid,$busskey,$input){
+       	  alert('可以根据业务id获取表单信息'+$busskey+'|输入路由为：'+$input);
+       	    var $beok = false;
+    	        var $res = '';
+    		   	 $.ajax({
+    			     type:'post',
+    			     url:'http://localhost:8060/workflow/leave/complete',
+    			     async: false,
+    			     data:{taskid:$taskid,keys:'input',values:$input,types:'S'},
+    			     cache:false,
+    			     dataType:'json',
+    			     success:function(data){
+    			         $res = data.totalCount;
+    			     },
+    	            error:function(XMLHttpRequest, textStatus, errorThrown) {
+    	                $res = XMLHttpRequest.responseText;
+    	            }
+    			 });
+    		  	 if($res=='finished'){
+    		   		 alert('执行完毕！');
+    		   	 }else if($res=='paramError'){
+    		   		alert('参数错误，执行失败，请重新输入！');
+    		   	 }else{
+    		   		alert('系统异常，请联系运维人员！');
+    		   	 }
+        },         
           deleteItem:function ($id) {//这里可以删除数据
             alert('删除第'+$id+'条数据！');
           },

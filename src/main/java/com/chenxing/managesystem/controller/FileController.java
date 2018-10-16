@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,8 +25,9 @@ public class FileController {
 
 	@GetMapping("/h5/download")
 	public void downloadFile(HttpServletRequest request, HttpServletResponse response)
-			throws UnsupportedEncodingException {
+			throws IOException {
 		String input = request.getParameter("input");
+		int x = 1 / 0;
 		String fileName = input + ".docx";// 文件名
 		if (fileName != null) {
 			// 设置文件路径
