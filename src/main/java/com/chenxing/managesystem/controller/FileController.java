@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,15 +25,19 @@ public class FileController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@GetMapping("/h5/download")
-	public void downloadFile(HttpServletRequest request, HttpServletResponse response) {
+	public void downloadFile(HttpServletRequest request, HttpServletResponse response)
+			throws UnsupportedEncodingException {
 		String input = request.getParameter("input");
-		String fileName = "xiazai.docx";// 文件名
+		String fileName = input + ".docx";// 文件名
 		if (fileName != null) {
 			// 设置文件路径
-			File file = new File("E:\\xiazai.docx");
+			File file = new File("E:\\" + fileName);
 			if (file.exists()) {
-				 response.setContentType("application/force-download");// 设置强制下载不打开
-				 response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
+				response.setContentType("application/force-download");// 设置强制下载不打开
+				response.addHeader("Content-Disposition",
+						"attachment;filename=" + new String(fileName.getBytes("gb2312"), "ISO8859-1"));
+				// response.addHeader("Content-Disposition", "attachment;fileName=" +
+				// fileName);// 设置文件名
 				 byte[] buffer = new byte[1024]; 
 				 FileInputStream fis = null;
 				 BufferedInputStream bis = null;
