@@ -6,10 +6,41 @@
     <link href="http://test.mystaticdomain.com/css/bootstrap.min.css?v=3.3.6" rel="stylesheet"/>
     <script type="text/javascript" src="http://test.mystaticdomain.com/js/vue-2.5.17.js"></script>
     <script type="text/javascript" src="http://test.mystaticdomain.com/js/jquery.min.js"></script>
+    
+    <script>     
+	    $(function() {      
+	        $("input[type='button']").bind("click", function() {    
+	            $.ajax({
+	                type : 'post',
+	                url:'http://localhost:8060/user/testMybatis',
+	                dataType : 'text',
+	                data : $('#f1').serialize(),  
+	                success : function (xmlq) {
+	                    alert(xmlq);
+	                },
+	                error:function(XMLHttpRequest, textStatus, errorThrown) {
+	                    alert(XMLHttpRequest.responseText);
+	                    //  alert(XMLHttpRequest.status);
+	                    //  alert(XMLHttpRequest.readyState);
+	                    //  alert(textStatus);
+	                }
+	            });
+	         });
+	    });
+    </script>     
+    
+    
   </head>
   <body>
     <div class="bs-example" id="table">
     文件下载<a href="download?input=文件001">下载文件</a>
+    <br/>
+       测试mybatis+spring添加用户
+	<form name="f1" id="f1">
+	    <input type="text" name="currentpage" value="2"/>
+	    <input type="text" name="pagesize" value="3"/>
+	    <input type="button" value="执行" />
+	</form>  
     </div>
   </body>
 </html>
