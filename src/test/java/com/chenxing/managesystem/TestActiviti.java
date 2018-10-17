@@ -50,7 +50,12 @@ public class TestActiviti {
 		l.setStartTime("2030-07-29 00:00:00");
 		l.setUserId("admin");
 
-		oaLeaveWorkFlowService.startProcess(l);
+		try {
+			oaLeaveWorkFlowService.startProcess(l);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test

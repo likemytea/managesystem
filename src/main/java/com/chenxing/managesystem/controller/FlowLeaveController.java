@@ -56,7 +56,11 @@ public class FlowLeaveController {
 		l.setReason(reason);
 		l.setStartTime(startTime);
 		l.setUserId(userDetails.getUsername());
-		oaLeaveWorkFlowService.startProcess(l);
+		try {
+			oaLeaveWorkFlowService.startProcess(l);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return "hello,leave!";
 	}
 

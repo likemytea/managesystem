@@ -28,6 +28,14 @@ public class OaLeaveDao {
 	/**
 	 * save 实体
 	 */
+	public int updateOaLeave(Leave lv) {
+
+		return jdbcTemplate.update("update oa_leave set reality_end_time = ? where id = ?",
+				new Object[] { lv.getRealityEndTime(), lv.getId() });
+	}
+	/**
+	 * save 实体
+	 */
 	public int insertOaLeave(Leave lv) {
 
 		// Create Table

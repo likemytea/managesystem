@@ -1,10 +1,11 @@
 package com.chenxing.managesystem.flowTaskListener;
 
+import java.util.Date;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.assertj.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +51,10 @@ public class ExecBackEndProcessor implements TaskListener {
 				.processInstanceId(processInstanceId).singleResult();
 		Leave leave = oaLeaveDao.findById(processInstance.getBusinessKey());
 
-		Object remarks = delegateTask.getVariable("请假原因");
-		log.info("remarks:" + remarks);
-		leave.setRealityEndTime(DateUtil.now());
-		oaLeaveDao.insertOaLeave(leave);
+		Object applyTime = delegateTask.getVariable("applyTime");
+		Object reason = delegateTask.getVariable("reason");
+		log.info("reality_end_time:" + applyTime + "reason" + reason);
+		leave.setRealityEndTime(new Date());
+		oaLeaveDao.updateOaLeave(leave);
 	}
 }

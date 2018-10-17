@@ -1,6 +1,7 @@
 package com.chenxing.managesystem.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -55,35 +56,30 @@ public class OaLeaveWorkFlowService {
 	String keyOaLeave;
 
 	// 开始流程，传入申请者的id以及公司的id
-	public void startProcess(Leave leave) {
+	public void startProcess(Leave leave) throws Exception {
 		leave.setId(Long.parseLong(PrimarykeyGenerated.generateId(false)));
+		leave.setApplyTime(new Date());
 		ProcessInstance processInstance = null;
 		Map<String, Object> variables = new HashMap<String, Object>();
 		variables.put("applyTime", leave.getApplyTime());
 		variables.put("reason", leave.getReason());
-		// TODO;liuxingactiviti的各个事务如何在此service层保持
-		try {
-			// 用来设置启动流程的人员ID，引擎会自动把用户ID保存到activiti:initiator中
-			identityService.setAuthenticatedUserId(leave.getUserId());
+		// TODO;liuxing注意在servicetrycatch时对事务的影响
+		// 用来设置启动流程的人员ID，引擎会自动把用户ID保存到activiti:initiator中
+		identityService.setAuthenticatedUserId(leave.getUserId());
 
-			// 启动流程
-			processInstance = runtimeService.startProcessInstanceByKey(keyOaLeave,
-					String.valueOf(leave.getId()), variables);
-			leave.setProcessInstanceId(processInstance.getId());
-			int count = oaLeaveDao.insertOaLeave(leave);
-			if (count <= 0) {
-				throw new Exception("insert oa_leave failed ");
-			}
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			e.printStackTrace();
-		} finally {
-			identityService.setAuthenticatedUserId(null);
+		// 启动流程
+		processInstance = runtimeService.startProcessInstanceByKey(keyOaLeave, String.valueOf(leave.getId()),
+				variables);
+		leave.setProcessInstanceId(processInstance.getId());
+		int count = oaLeaveDao.insertOaLeave(leave);
+		if (count <= 0) {
+			throw new Exception("insert oa_leave failed ");
 		}
 
 	}
 
 	// 获得某个人的任务别表,参数是受托人
+	@Transactional(readOnly = true)
 	public PageResult<Leave> getTasks(String assignee, long currentpage, long pagesize) {
 		PageResult<Leave> resRtn = new PageResult<Leave>();
 		TaskQuery taskQuery = taskService.createTaskQuery().taskCandidateOrAssigned(assignee);
@@ -106,6 +102,7 @@ public class OaLeaveWorkFlowService {
 			}
 
 			Leave leave = new Leave();
+			log.info("bussinesskey:" + businessKey);
 			leave.setId(Long.parseLong(businessKey));
 
 			Map<String, Object> taskmap = new LinkedHashMap<>();
