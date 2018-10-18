@@ -1,6 +1,8 @@
 package com.chenxing.managesystem;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.alibaba.fastjson.JSON;
 import com.chenxing.common.vo.PageResult;
 import com.chenxing.managesystem.domain.Leave;
 import com.chenxing.managesystem.service.OaLeaveWorkFlowService;
@@ -82,4 +85,34 @@ public class TestActiviti {
 			e.printStackTrace();
 		}
 		}
+
+	public static void main(String[] args) {
+		List<String> lst = new ArrayList<String>();
+		lst.add("1");
+		lst.add("3");
+		lst.add("2");
+		lst.add("4");
+		lst.add("5");
+		lst.add("6");
+		lst.add("7");
+		lst.add("8");
+		lst.add("9");
+		lst.add("10");
+		lst.add("11");
+		lst.add("12");
+		lst.add("13");
+		List<String> tmpLst = new ArrayList<String>();
+		for (int i = 0; i < lst.size(); i++) {
+			if (i % 5 == 0 && i != 0) {
+				System.out.println(JSON.toJSONString(tmpLst));
+				tmpLst.clear();
+				System.out.println("++++++++++++++++");
+			}
+			tmpLst.add(lst.get(i));
+		}
+		if (tmpLst.size() > 0) {
+			System.out.println(JSON.toJSONString(tmpLst));
+		}
+	}
+
 }
